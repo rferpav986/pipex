@@ -18,7 +18,7 @@ BOBJS = $(BONUS:.c=.o) $(UTILS:.c=.o)
 all: $(NAME)
 
 $(LIBFT):
-	make all -C libft
+	make all -C LIBFT
 
 $(NAME): $(OBJS) $(LIBFT)
 	cc $(FLAGS) $(OBJS) -Llibft -lft -o $(NAME)
