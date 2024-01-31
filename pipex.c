@@ -6,7 +6,7 @@
 /*   By: rauferna <rauferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 10:25:14 by rauferna          #+#    #+#             */
-/*   Updated: 2024/01/30 19:02:35 by rauferna         ###   ########.fr       */
+/*   Updated: 2024/01/31 12:31:10 by rauferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,8 @@ void	parent_process(char **av, int *fd, char **envp)
 	if (pid == -1)
 		exit(EXIT_FAILURE);
 	else if (pid == 0)
-	{
-		waitpid(pid, NULL, 0);
 		callexecve(av[3], envp);
-	}
+	waitpid(pid, NULL, 0);
 }
 
 int	main(int ac, char **av, char **envp)

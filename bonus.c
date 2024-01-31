@@ -6,37 +6,12 @@
 /*   By: rauferna <rauferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 10:25:38 by rauferna          #+#    #+#             */
-/*   Updated: 2024/01/30 19:04:39 by rauferna         ###   ########.fr       */
+/*   Updated: 2024/01/31 12:15:51 by rauferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include "pipex.h"
-
-void	child_process_bonus(char *av, char **envp)
-{
-	int		fd[2];
-	pid_t	pid;
-
-	if (pipe(fd) == -1)
-		exit(EXIT_FAILURE);
-	pid = fork();
-	if (pid == -1)
-		exit(EXIT_FAILURE);
-	else if (pid == 0)
-	{
-		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
-		callexecve(av, envp);
-		waitpid(pid, NULL, 0);
-		exit(EXIT_SUCCESS);
-	}
-	else
-	{
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-	}
-}
 
 void	parent_process_doc(char **argv, int *fd, char **envp, int file)
 {
@@ -44,7 +19,7 @@ void	parent_process_doc(char **argv, int *fd, char **envp, int file)
 
 	close(fd[1]);
 	dup2(fd[0], STDIN_FILENO);
-	file = openfile(argv[5], 3);
+	file = open(argv[5], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	dup2(file, STDOUT_FILENO);
 	pid = fork();
 	if (pid == -1)
@@ -96,6 +71,31 @@ void	here_doc_bonus(char **av, char **envp)
 	{
 		waitpid(pid, NULL, 0);
 		parent_process_doc(av, fd, envp, file);
+	}
+}
+
+void	child_process_bonus(char *av, char **envp)
+{
+	int		fd[2];
+	pid_t	pid;
+
+	if (pipe(fd) == -1)
+		exit(EXIT_FAILURE);
+	pid = fork();
+	if (pid == -1)
+		exit(EXIT_FAILURE);
+	else if (pid == 0)
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		callexecve(av, envp);
+		waitpid(pid, NULL, 0);
+		exit(EXIT_SUCCESS);
+	}
+	else
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
 	}
 }
 
