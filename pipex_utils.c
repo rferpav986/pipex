@@ -6,7 +6,7 @@
 /*   By: rauferna <rauferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 10:25:05 by rauferna          #+#    #+#             */
-/*   Updated: 2024/01/30 19:05:38 by rauferna         ###   ########.fr       */
+/*   Updated: 2024/02/01 10:41:45 by rauferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,13 @@ void	callexecve(char *command, char **envp)
 {
 	char	**args;
 	char	*exec1;
-	int		i;
 
 	args = ft_split_pipex(command, ' ');
 	if (ft_strncmp(command, "./", 2) != 0)
 		exec1 = find_pathcmd(envp, args[0]);
 	else
 		exec1 = ft_strdup(command);
-	i = execve(exec1, args, envp);
-	ft_putnbr_fd(i, 2);
-	if (i == -1)
+	if (execve(exec1, args, envp) == -1)
 	{
 		free(exec1);
 		free_mem(args);
